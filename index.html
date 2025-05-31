@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Atrapa el Círculo</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+
+    #game-area {
+      width: 80%;
+      height: 400px;
+      margin: 0 auto;
+      border: 2px solid #333;
+      position: relative;
+      background-color: #fff;
+      overflow: hidden;
+    }
+
+    .circle {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Atrapa el Círculo</h1>
+  <p>Puntos: <span id="score">0</span></p>
+  <div id="game-area"></div>
+
+  <script>
+    const gameArea = document.getElementById("game-area");
+    const scoreDisplay = document.getElementById("score");
+    let score = 0;
+    let streak = 0;
+    let intervalTime = 2000;
+    let gameInterval;
+
+    function createCircle() {
+      const circle = document.createElement("div");
+      circle.classList.add("circle");
+
+      const x = Math.random() * (gameArea.clientWidth - 50);
+      const y = Math.random() * (gameArea.clientHeight - 50);
+
+      circle.style.left = `${x}px`;
+      circle.style.top = `${y}px`;
+
+      circle.addEventListener("click", () => {
+        score++;
+        streak++;
+        scoreDisplay.textContent = score;
+        circle.remove();
+
+        if (streak % 5 === 0) {
+          alert("¡Siguiente nivel!");
+          aumentarDificultad();
+        }
+      });
+
+      gameArea.appendChild(circle);
+
+      setTimeout(() => {
+        if (circle.parentElement) {
+          circle.remove();
+          streak = 0;
+        }
+      }, 1500);
+    }
+
+    function startGame() {
+      gameInterval = setInterval(createCircle, intervalTime);
+    }
+
+    function aumentarDificultad() {
+      clearInterval(gameInterval);
+      intervalTime = Math.max(500, intervalTime - 300);
+      startGame();
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
